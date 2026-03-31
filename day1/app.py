@@ -84,6 +84,13 @@ col3.metric("Democrats", f"{(1-df_raw['D']).sum():,}")
 st.markdown("---")
 
 # ─────────────────────────────────────────────
+# HELPER — build year dummies (categorical)
+# ─────────────────────────────────────────────
+def make_year_dummies(df):
+    """Return dummy-encoded year columns (drop_first=True) for use in OLS/logit."""
+    return pd.get_dummies(df["year"].astype(str), prefix="yr", drop_first=True).astype(float)
+
+# ─────────────────────────────────────────────
 # SECTION 1 — NAIVE ESTIMATOR & BIAS DECOMPOSITION
 # ─────────────────────────────────────────────
 st.header("1 · Naive Estimator and Bias Decomposition")
@@ -110,8 +117,9 @@ if st.button("▶ Run Section 1 — Naive Estimator"):
     mu0 = df[df["D"] == 0]["Y"].mean()
     naive = mu1 - mu0
 
-    # Regression-based ATT proxy (using year as covariate)
-    X_reg = sm.add_constant(df[["D", "year"]])
+    # Regression-based ATT proxy (year as categorical dummies)
+    year_dummies = make_year_dummies(df)
+    X_reg = sm.add_constant(pd.concat([df[["D"]], year_dummies], axis=1))
     ols = sm.OLS(df["Y"], X_reg).fit()
     att_reg = ols.params["D"]
 
@@ -167,8 +175,8 @@ if st.button("▶ Run Section 2 — Overlap Check"):
     df = df_raw.copy()
     df["Y"] = df["text"].str.len()
 
-    # Build covariate matrix
-    year_dummies = pd.get_dummies(df["year"], prefix="yr", drop_first=True)
+    # Build covariate matrix — year as categorical dummies
+    year_dummies = make_year_dummies(df)
     X_ps = year_dummies.astype(float)
 
     scaler = StandardScaler()
@@ -192,8 +200,6 @@ if st.button("▶ Run Section 2 — Overlap Check"):
 
     ps_min = ps.min()
     ps_max = ps.max()
-    ps_min_R = ps[df["D"] == 1].min()
-    ps_max_D = ps[df["D"] == 0].max()
 
     col1, col2 = st.columns(2)
     col1.metric("Min propensity score", f"{ps_min:.3f}")
@@ -237,22 +243,24 @@ if st.button("▶ Run Section 3 — Adjustment Formula & IPW"):
     df = df_raw.copy()
     df["Y"] = df["text"].str.len()
 
+    # Year as categorical dummies
+    year_dummies = make_year_dummies(df)
+
     # Propensity scores
-    year_dummies = pd.get_dummies(df["year"], prefix="yr", drop_first=True)
-    X_ps = year_dummies.astype(float)
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_ps)
+    X_scaled = scaler.fit_transform(year_dummies)
     lr = LogisticRegression(max_iter=1000)
     lr.fit(X_scaled, df["D"])
     df["ps"] = lr.predict_proba(X_scaled)[:, 1]
 
-    # G-formula
-    X_reg = sm.add_constant(pd.concat([df[["D", "year"]], year_dummies], axis=1))
+    # G-formula — fit on D + year dummies
+    X_reg = sm.add_constant(pd.concat([df[["D"]], year_dummies], axis=1))
     ols = sm.OLS(df["Y"], X_reg).fit()
+
     df_1 = df.copy(); df_1["D"] = 1
     df_0 = df.copy(); df_0["D"] = 0
-    X1 = sm.add_constant(pd.concat([df_1[["D", "year"]], year_dummies], axis=1))
-    X0 = sm.add_constant(pd.concat([df_0[["D", "year"]], year_dummies], axis=1))
+    X1 = sm.add_constant(pd.concat([df_1[["D"]], year_dummies], axis=1))
+    X0 = sm.add_constant(pd.concat([df_0[["D"]], year_dummies], axis=1))
     mu1_hat = ols.predict(X1)
     mu0_hat = ols.predict(X0)
     ate_gformula = (mu1_hat - mu0_hat).mean()
@@ -286,14 +294,15 @@ if st.button("▶ Run Section 3 — Adjustment Formula & IPW"):
     plt.close()
 
     st.markdown(
-        "The g-formula and IPW estimators condition on `year`, removing confounding "
-        "due to year-level differences in speech patterns. Compare these to the naive estimate."
+        "The g-formula and IPW estimators condition on `year` (as a categorical variable), "
+        "removing confounding due to year-level differences in speech patterns. "
+        "Compare these to the naive estimate."
     )
 
 st.markdown("---")
 
 # ─────────────────────────────────────────────
-# SECTION 4 — LLM MEASUREMENT (PART B)
+# SECTION 4 — LLM AS MEASUREMENT OPERATOR
 # ─────────────────────────────────────────────
 st.header("4 · LLM as Measurement Operator")
 
@@ -344,11 +353,14 @@ if st.button("▶ Run Section 4 — LLM Measurement"):
 
     df = df.dropna(subset=["Y_tilde"])
 
+    # Year as categorical dummies
+    year_dummies = make_year_dummies(df)
+
     # Naive LLM-based ATE
     ate_llm_naive = df[df["D"] == 1]["Y_tilde"].mean() - df[df["D"] == 0]["Y_tilde"].mean()
 
-    # Adjusted LLM-based ATE (regression on year)
-    X_reg = sm.add_constant(df[["D", "year"]])
+    # Adjusted LLM-based ATE (year as categorical)
+    X_reg = sm.add_constant(pd.concat([df[["D"]], year_dummies], axis=1))
     ols_llm = sm.OLS(df["Y_tilde"], X_reg).fit()
     ate_llm_adj = ols_llm.params["D"]
 
@@ -418,19 +430,20 @@ if st.button("▶ Run Section 5 — Full Summary"):
     df = df_raw.copy()
     df["Y"] = df["text"].str.len()
 
+    # Year as categorical dummies
+    year_dummies = make_year_dummies(df)
+
     # Naive
     naive = df[df["D"] == 1]["Y"].mean() - df[df["D"] == 0]["Y"].mean()
 
-    # Regression adjusted
-    X_reg = sm.add_constant(df[["D", "year"]])
+    # Regression adjusted (year as categorical)
+    X_reg = sm.add_constant(pd.concat([df[["D"]], year_dummies], axis=1))
     ols = sm.OLS(df["Y"], X_reg).fit()
     ate_reg = ols.params["D"]
 
     # Propensity score / IPW
-    year_dummies = pd.get_dummies(df["year"], prefix="yr", drop_first=True)
-    X_ps = year_dummies.astype(float)
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_ps)
+    X_scaled = scaler.fit_transform(year_dummies)
     lr = LogisticRegression(max_iter=1000)
     lr.fit(X_scaled, df["D"])
     ps = lr.predict_proba(X_scaled)[:, 1].clip(1e-6, 1 - 1e-6)
@@ -445,8 +458,9 @@ if st.button("▶ Run Section 5 — Full Summary"):
         else:
             df["Y_tilde"] = df_stance["Y_tilde"].values[:len(df)]
         df_llm = df.dropna(subset=["Y_tilde"])
+        year_dummies_llm = make_year_dummies(df_llm)
         ate_llm_naive = df_llm[df_llm["D"] == 1]["Y_tilde"].mean() - df_llm[df_llm["D"] == 0]["Y_tilde"].mean()
-        X_llm = sm.add_constant(df_llm[["D", "year"]])
+        X_llm = sm.add_constant(pd.concat([df_llm[["D"]], year_dummies_llm], axis=1))
         ate_llm_adj = sm.OLS(df_llm["Y_tilde"], X_llm).fit().params["D"]
         llm_rows = [
             {"Estimator": "LLM stance — Naive", "Outcome": "Ỹ (stance)", "ATE": f"{ate_llm_naive:+.4f}", "Adjusted": "No"},
