@@ -27,7 +27,7 @@ Use the sidebar to navigate to each day's materials.
 |-----|-------|--------|
 | [Day 1](Day_1) | Standard causal inference, LLM measurement, adjustment methods | ✅ Available |
 | [Day 2](Day_2) | Causal estimators (DiM, Regression, G-formula, Matching, IPW, AIPW), measurement error (MCAR vs MNAR) | ✅ Available |
-| Day 3 | Coming soon | 🔜 |
+| [Day 3](Day_3) | Estimation \& Auditing with LLMs: DML, DSL, Causal Auditing | 🔜 |
 """
 )
 
