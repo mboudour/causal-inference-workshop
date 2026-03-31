@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Moses Boudourides
+# Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 """
 Causal Inference with LLMs — Day 1 Interactive App
 Moses Boudourides | Northwestern University
