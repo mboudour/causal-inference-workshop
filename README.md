@@ -6,11 +6,15 @@ Three-day academic workshop materials on applying Large Language Models (LLMs) t
 
 **[https://causal-inference-workshop-odxipb5ycay2fkgr9xezet.streamlit.app/](https://causal-inference-workshop-odxipb5ycay2fkgr9xezet.streamlit.app/)**
 
+The interactive companion app runs entirely in the browser — no local installation required. Use the sidebar to navigate between days. Each day's page walks through the core computations step by step, with interactive sliders and buttons that let you adjust parameters (number of cross-fitting folds, noise levels, labeled sample size, and more) and immediately see how the results change. The app uses the same U.S. Congressional speeches dataset (Hein Bound 111) as the local scripts, so the numbers match what you obtain by running the scripts on your own machine.
+
+The interactive companion app runs entirely in the browser — no local installation required. It mirrors the workshop's three-day structure: use the sidebar to navigate between days. Each day's page walks through the core computations step by step, with interactive sliders and buttons that let you adjust parameters (number of folds, noise levels, labeled sample size, etc.) and immediately see how the results change. The app uses the same U.S. Congressional speeches dataset (Hein Bound 111) as the local scripts, so the numbers you see in the app match what you would obtain by running the scripts on your own machine.
+
 | Day | Topic |
 |-----|-------|
 | [day1/](day1/) | Standard causal inference, LLM measurement, adjustment methods |
 | [day2/](day2/) | Causal estimators (DiM, Regression, G-formula, Matching, IPW, AIPW), measurement error (MCAR vs MNAR) |
-| day3/ | Coming soon |
+| [day3/](day3/) | Estimation and Auditing with LLMs: DML, DSL, Causal Auditing |
 
 ## Replicability and Reproducibility
 
@@ -54,6 +58,18 @@ Run all scripts from the repository root directory.
 1. `Rscript day2/r_app/partA_sentiment.R`
 2. `Rscript day2/r_app/partB_estimators.R`
 3. `Rscript day2/r_app/partC_measurement_error.R`
+
+
+**Day 3 — Python:**
+1. `python3 day3/python_app/partA_dml.py`
+2. `python3 day3/python_app/partB_dsl.py`
+3. `python3 day3/python_app/partC_auditing.py`
+4. `python3 day3/python_app/compare_days.py`
+
+**Day 3 — R (fully self-contained, no Python required):**
+1. `Rscript day3/r_app/partA_dml.R`
+2. `Rscript day3/r_app/partB_dsl.R`
+3. `Rscript day3/r_app/partC_auditing.R`
 
 ### Determinism and Caching
 
