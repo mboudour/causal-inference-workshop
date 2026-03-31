@@ -260,10 +260,10 @@ if st.button("▶ Run Section 3 — Adjustment Formula & IPW"):
     X_reg = sm.add_constant(pd.concat([df[["D"]], year_dummies], axis=1))
     ols = sm.OLS(df["Y"], X_reg).fit()
 
-    df_1 = df.copy(); df_1["D"] = 1
-    df_0 = df.copy(); df_0["D"] = 0
-    X1 = sm.add_constant(pd.concat([df_1[["D"]], year_dummies], axis=1))
-    X0 = sm.add_constant(pd.concat([df_0[["D"]], year_dummies], axis=1))
+    X1 = pd.concat([df[["D"]].assign(D=1), year_dummies], axis=1)
+    X0 = pd.concat([df[["D"]].assign(D=0), year_dummies], axis=1)
+    X1 = sm.add_constant(X1, has_constant="add").reindex(columns=X_reg.columns, fill_value=0)
+    X0 = sm.add_constant(X0, has_constant="add").reindex(columns=X_reg.columns, fill_value=0)
     mu1_hat = ols.predict(X1)
     mu0_hat = ols.predict(X0)
     ate_gformula = (mu1_hat - mu0_hat).mean()
