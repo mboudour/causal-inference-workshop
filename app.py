@@ -26,7 +26,7 @@ Use the sidebar to navigate to each day's materials.
 | Day | Topic | Status |
 |-----|-------|--------|
 | [Day 1](Day_1) | Standard causal inference, LLM measurement, adjustment methods | ✅ Available |
-| Day 2 | Coming soon | 🔜 |
+| [Day 2](Day_2) | Causal estimators (DiM, Regression, G-formula, Matching, IPW, AIPW), measurement error (MCAR vs MNAR) | ✅ Available |
 | Day 3 | Coming soon | 🔜 |
 """
 )
