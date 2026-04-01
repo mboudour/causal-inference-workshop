@@ -19,7 +19,7 @@ suppressPackageStartupMessages({
 
 cat("--- Day 3 Part A: Double Machine Learning (DML) ---\n")
 
-data_path <- "day1_package/data/speeches_sample.csv"
+data_path <- "day1/data/speeches_sample.csv"
 out_path  <- "day3/data/dml_results_R.csv"
 
 dir.create("day3/data", showWarnings = FALSE, recursive = TRUE)

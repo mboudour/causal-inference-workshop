@@ -33,7 +33,7 @@ def build_features(df, n_components=30):
 def main():
     print("--- Day 3 Part B: Design-Based Supervised Learning (DSL) ---")
 
-    data_path = 'day1_package/data/speeches_sample.csv'
+    data_path = 'day1/data/speeches_sample.csv'
     out_path  = 'day3/data/dsl_results.csv'
 
     os.makedirs('day3/data', exist_ok=True)

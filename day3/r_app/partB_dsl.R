@@ -18,7 +18,7 @@ suppressPackageStartupMessages({
 
 cat("--- Day 3 Part B: Design-Based Supervised Learning (DSL) ---\n")
 
-data_path <- "day1_package/data/speeches_sample.csv"
+data_path <- "day1/data/speeches_sample.csv"
 out_path  <- "day3/data/dsl_results_R.csv"
 
 dir.create("day3/data", showWarnings = FALSE, recursive = TRUE)

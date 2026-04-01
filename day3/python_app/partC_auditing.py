@@ -47,7 +47,7 @@ def build_features(texts, vectorizer=None, svd=None, n_components=30):
 def main():
     print("--- Day 3 Part C: Auditing LLMs as Causal Systems ---")
 
-    data_path = 'day1_package/data/speeches_sample.csv'
+    data_path = 'day1/data/speeches_sample.csv'
     out_path  = 'day3/data/audit_results.csv'
 
     os.makedirs('day3/data', exist_ok=True)

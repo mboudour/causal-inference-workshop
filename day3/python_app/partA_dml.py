@@ -84,7 +84,7 @@ def dml_estimate(Y, D, X, n_splits=5, random_state=42):
 def main():
     print("--- Day 3 Part A: Double Machine Learning (DML) ---")
 
-    data_path = 'day1_package/data/speeches_sample.csv'
+    data_path = 'day1/data/speeches_sample.csv'
     out_path  = 'day3/data/dml_results.csv'
 
     os.makedirs('day3/data', exist_ok=True)

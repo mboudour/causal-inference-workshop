@@ -21,7 +21,7 @@ suppressPackageStartupMessages({
 
 cat("--- Day 3 Part C: Auditing LLMs as Causal Systems ---\n")
 
-data_path <- "day1_package/data/speeches_sample.csv"
+data_path <- "day1/data/speeches_sample.csv"
 out_path  <- "day3/data/audit_results_R.csv"
 
 dir.create("day3/data", showWarnings = FALSE, recursive = TRUE)
