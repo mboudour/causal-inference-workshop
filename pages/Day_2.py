@@ -102,14 +102,12 @@ _dag_files2 = {
     "DAG 3 — Full Causal DAG": os.path.join(_dag_dir2, "dag3_full.png"),
 }
 
-_dag_cols2 = st.columns(3)
-for _col, (_title, _path) in zip(_dag_cols2, _dag_files2.items()):
-    with _col:
-        st.markdown(f"**{_title}**")
-        if os.path.exists(_path):
-            st.image(_path, use_container_width=True)
-        else:
-            st.info("DAG image not found. Run `python3 day2/python_app/dag_day2.py` (or `Rscript day2/r_app/dag_day2.R`) from `seminar_computations/` to generate it.")
+for _title, _path in _dag_files2.items():
+    st.markdown(f"**{_title}**")
+    if os.path.exists(_path):
+        st.image(_path, use_container_width=True)
+    else:
+        st.info("DAG image not found. Run `python3 day2/python_app/dag_day2.py` (or `Rscript day2/r_app/dag_day2.R`) from `seminar_computations/` to generate it.")
 
 st.markdown("---")
 

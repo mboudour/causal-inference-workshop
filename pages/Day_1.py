@@ -120,14 +120,12 @@ _dag_files = {
     "DAG 3 — LLM Measurement Error": os.path.join(_dag_dir, "dag3_measurement.png"),
 }
 
-_dag_cols = st.columns(3)
-for _col, (_title, _path) in zip(_dag_cols, _dag_files.items()):
-    with _col:
-        st.markdown(f"**{_title}**")
-        if os.path.exists(_path):
-            st.image(_path, use_container_width=True)
-        else:
-            st.info(f"DAG image not found. Run `python3 day1/python_app/dag_day1.py` (or `Rscript day1/r_app/dag_day1.R`) from `seminar_computations/` to generate it.")
+for _title, _path in _dag_files.items():
+    st.markdown(f"**{_title}**")
+    if os.path.exists(_path):
+        st.image(_path, use_container_width=True)
+    else:
+        st.info(f"DAG image not found. Run `python3 day1/python_app/dag_day1.py` (or `Rscript day1/r_app/dag_day1.R`) from `seminar_computations/` to generate it.")
 
 st.markdown("---")
 
