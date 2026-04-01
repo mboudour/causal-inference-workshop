@@ -78,7 +78,44 @@ col2.metric("Republicans", f"{df_raw['D'].sum():,}")
 col3.metric("Democrats", f"{(1-df_raw['D']).sum():,}")
 st.markdown("---")
 
-# ── Section 1: DML ────────────────────────────────────────────────────────────
+# ── Section DAGs: Causal Structure Diagrams ───────────────────────────────────
+st.header("DAGs · Causal Structure Diagrams")
+
+st.markdown(
+    """
+These three directed acyclic graphs (DAGs) illustrate the causal structure underlying Day 3.
+
+- **DAG 1 — DML:** High-dimensional covariates X confound both treatment D and outcome Ỹ.
+  ML nuisance models ĝ(X) and ê(X) partial out confounding; the DML ATE θ̂ is recovered
+  by regressing outcome residuals on treatment residuals.
+- **DAG 2 — DSL:** A correction model m(X, D, Ỹ) is trained on a small labeled sample L
+  (where true Y is observed) and applied to the large unlabeled sample U to produce
+  corrected outcomes Ŷ, from which the DSL ATE is estimated.
+- **DAG 3 — Causal Auditing:** The sensitive attribute S (party) enters the LLM model f(W, S)
+  as a direct input. Counterfactual outputs Ŷ' under do(S') are compared to Ŷ to compute
+  individual causal effects Δᵢ and the Average Causal Bias (ACB).
+"""
+)
+
+_dag_dir3 = os.path.join(os.path.dirname(__file__), "..", "day3", "data", "dags")
+_dag_files3 = {
+    "DAG 1 — DML: High-Dim Confounding": os.path.join(_dag_dir3, "dag1_dml.png"),
+    "DAG 2 — DSL: Measurement Bridge": os.path.join(_dag_dir3, "dag2_dsl.png"),
+    "DAG 3 — Causal Auditing (ACB)": os.path.join(_dag_dir3, "dag3_auditing.png"),
+}
+
+_dag_cols3 = st.columns(3)
+for _col, (_title, _path) in zip(_dag_cols3, _dag_files3.items()):
+    with _col:
+        st.markdown(f"**{_title}**")
+        if os.path.exists(_path):
+            st.image(_path, use_container_width=True)
+        else:
+            st.info("DAG image not found. Run `python3 day3/python_app/dag_day3.py` (or `Rscript day3/r_app/dag_day3.R`) from `seminar_computations/` to generate it.")
+
+st.markdown("---")
+
+# ── Section 1: DML ─────────────────────────────────────────────────────────────────────────────────
 st.header("1 · Double Machine Learning (DML)")
 st.markdown(
     r"""
