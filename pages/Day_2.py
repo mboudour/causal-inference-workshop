@@ -79,6 +79,40 @@ col3.metric("Democrats", f"{(1-df_raw['D']).sum():,}")
 
 st.markdown("---")
 
+# ── Section DAGs: Causal Structure Diagrams ───────────────────────────────────
+st.header("DAGs · Causal Structure Diagrams")
+
+st.markdown(
+    """
+These three directed acyclic graphs (DAGs) illustrate the causal structure underlying Day 2.
+
+- **DAG 1 — MCAR:** Error ε is independent of treatment D and covariates X (classical / MCAR).
+  Attenuates estimates but does not introduce systematic bias.
+- **DAG 2 — MNAR:** A dashed D → ε path shows that the LLM measurement error depends on
+  treatment (non-classical / MNAR), biasing causal estimates even after adjustment.
+- **DAG 3 — Full DAG:** Complete data-generating process with unobserved confounder U,
+  treatment D, true outcome Y, LLM proxy Ỹ, and the MNAR measurement error path.
+"""
+)
+
+_dag_dir2 = os.path.join(os.path.dirname(__file__), "..", "day2", "data", "dags")
+_dag_files2 = {
+    "DAG 1 — Classical Error (MCAR)": os.path.join(_dag_dir2, "dag1_mcar.png"),
+    "DAG 2 — Non-Classical Error (MNAR)": os.path.join(_dag_dir2, "dag2_mnar.png"),
+    "DAG 3 — Full Causal DAG": os.path.join(_dag_dir2, "dag3_full.png"),
+}
+
+_dag_cols2 = st.columns(3)
+for _col, (_title, _path) in zip(_dag_cols2, _dag_files2.items()):
+    with _col:
+        st.markdown(f"**{_title}**")
+        if os.path.exists(_path):
+            st.image(_path, use_container_width=True)
+        else:
+            st.info("DAG image not found. Run `python3 day2/python_app/dag_day2.py` (or `Rscript day2/r_app/dag_day2.R`) from `seminar_computations/` to generate it.")
+
+st.markdown("---")
+
 # ── Section 1: LLM Sentiment Measurement ─────────────────────────────────────
 st.header("1 · LLM Sentiment Measurement")
 
