@@ -1,6 +1,3 @@
-# Copyright (c) 2026 Moses Boudourides
-# Licensed under the MIT License. See LICENSE file in the project root for full license information.
-
 library(readr)
 library(dplyr)
 library(broom)

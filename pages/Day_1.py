@@ -93,6 +93,44 @@ def make_year_dummies(df):
     """Return dummy-encoded year columns (drop_first=True) for use in OLS/logit."""
     return pd.get_dummies(df["year"].astype(str), prefix="yr", drop_first=True).astype(float)
 
+st.markdown("---")
+
+# ─────────────────────────────────────────────
+# SECTION DAGs — CAUSAL STRUCTURE DIAGRAMS
+# ─────────────────────────────────────────────
+st.header("DAGs · Causal Structure Diagrams")
+
+st.markdown(
+    """
+These three directed acyclic graphs (DAGs) illustrate the causal structure underlying Day 1.
+
+- **DAG 1 — Baseline:** Treatment D (party) causes outcome Y, with observed confounder X (year)
+  and unobserved confounder U creating backdoor paths.
+- **DAG 2 — Adjustment:** Conditioning on X (highlighted) blocks the backdoor path through X,
+  identifying the causal effect of D on Y.
+- **DAG 3 — Measurement Error:** The LLM proxy Ỹ is a noisy measurement of Y, with error ε
+  that depends on D (non-classical / MNAR).
+"""
+)
+
+_dag_dir = os.path.join(os.path.dirname(__file__), "..", "day1", "data", "dags")
+_dag_files = {
+    "DAG 1 — Baseline Causal Structure": os.path.join(_dag_dir, "dag1_baseline.png"),
+    "DAG 2 — Backdoor Adjustment": os.path.join(_dag_dir, "dag2_adjustment.png"),
+    "DAG 3 — LLM Measurement Error": os.path.join(_dag_dir, "dag3_measurement.png"),
+}
+
+_dag_cols = st.columns(3)
+for _col, (_title, _path) in zip(_dag_cols, _dag_files.items()):
+    with _col:
+        st.markdown(f"**{_title}**")
+        if os.path.exists(_path):
+            st.image(_path, use_container_width=True)
+        else:
+            st.info(f"DAG image not found. Run `python3 day1/python_app/dag_day1.py` (or `Rscript day1/r_app/dag_day1.R`) from `seminar_computations/` to generate it.")
+
+st.markdown("---")
+
 # ─────────────────────────────────────────────
 # SECTION 1 — NAIVE ESTIMATOR & BIAS DECOMPOSITION
 # ─────────────────────────────────────────────
