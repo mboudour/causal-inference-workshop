@@ -6,7 +6,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 # --- LOAD DATA ---
-df = pd.read_csv("day1/data/llm/speeches_sample.csv")
+df = pd.read_csv("day1/data/speeches_sample.csv")
 
 # --- OUTCOME AND TREATMENT ---
 df["Y"] = df["text"].str.len()
@@ -63,7 +63,7 @@ ate_ipw = (
 print(f"ATE via IPW: {ate_ipw:.2f}")
 
 # 5. MEASUREMENT ERROR DIAGNOSTIC (requires Part B output)
-stance_path = "day1/data/llm/speeches_with_stance.csv"
+stance_path = "day1/data/speeches_with_stance.csv"
 if os.path.exists(stance_path):
     df_llm = pd.read_csv(stance_path)
     if "Y_tilde" in df_llm.columns:

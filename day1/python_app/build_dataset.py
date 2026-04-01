@@ -31,6 +31,6 @@ df["year"] = df["date"].astype(str).str[:4]
 
 # --- STEP 7: Save clean dataset ---
 
-df.to_csv("day1/data/llm/speeches_sample.csv", index=False)
+df.to_csv("day1/data/speeches_sample.csv", index=False)
 
 print("Final dataset ready:", len(df))

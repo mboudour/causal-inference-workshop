@@ -1,9 +1,12 @@
+import os
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 
+os.makedirs("day1/data", exist_ok=True)
+
 # --- LOAD DATA ---
-df = pd.read_csv("day1/data/llm/speeches_sample.csv")
+df = pd.read_csv("day1/data/speeches_sample.csv")
 
 # --- OUTCOME ---
 df["Y"] = df["text"].str.len()
@@ -26,6 +29,6 @@ model = sm.OLS(df["Y"], X).fit()
 print(model.summary())
 
 # --- SAVE RESULTS ---
-with open("day1/data/standard/results_partA.txt", "w") as f:
+with open("day1/data/results_partA.txt", "w") as f:
     f.write(f"Naive difference: {ate_naive}\n\n")
     f.write(model.summary().as_text())

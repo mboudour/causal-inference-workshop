@@ -30,6 +30,6 @@ df = df[df["text"].str.len() > 50].head(3000)
 
 # --- STEP 5: save ---
 
-df.to_csv("day1/data/llm/speeches_sample.csv", index=False)
+df.to_csv("day1/data/speeches_sample.csv", index=False)
 
 print("Real political dataset saved:", len(df), "rows")

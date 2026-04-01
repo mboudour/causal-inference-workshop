@@ -22,7 +22,7 @@ def estimate_ate(df, y_col):
 def main():
     print("--- Comparing Day 1 (Stance) vs Day 2 (Sentiment) ---")
 
-    day1_path = 'day1_package/data/speeches_with_stance.csv'
+    day1_path = 'day1/data/speeches_with_stance.csv'
     day2_path = 'day2/data/speeches_with_sentiment.csv'
 
     missing = []

@@ -13,7 +13,7 @@ library(text2vec)
 
 cat("--- Day 2 Part A: LLM Measurement (Sentiment) ---\n")
 
-data_path <- "day1_package/data/speeches_sample.csv"
+data_path <- "day1/data/speeches_sample.csv"
 out_path  <- "day2/data/speeches_with_sentiment_R.csv"
 
 # Ensure output directory exists

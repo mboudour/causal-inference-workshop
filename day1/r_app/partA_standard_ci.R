@@ -2,7 +2,7 @@ library(readr)
 library(dplyr)
 
 # --- LOAD DATA ---
-df <- read_csv("day1/data/llm/speeches_sample.csv", show_col_types = FALSE)
+df <- read_csv("day1/data/speeches_sample.csv", show_col_types = FALSE)
 
 # --- OUTCOME ---
 df <- df %>%

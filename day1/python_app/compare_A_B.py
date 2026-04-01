@@ -2,8 +2,8 @@ import pandas as pd
 
 # --- LOAD ---
 
-dfA = pd.read_csv("day1/data/llm/speeches_sample.csv")
-dfB = pd.read_csv("day1/data/llm/speeches_with_stance.csv")
+dfA = pd.read_csv("day1/data/speeches_sample.csv")
+dfB = pd.read_csv("day1/data/speeches_with_stance.csv")
 
 # --- PART A outcome ---
 

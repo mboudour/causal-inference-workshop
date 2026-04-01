@@ -19,7 +19,7 @@ os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 def main():
     print("--- Day 2 Part A: LLM Measurement (Sentiment) ---")
 
-    data_path  = 'day1_package/data/speeches_sample.csv'
+    data_path  = 'day1/data/speeches_sample.csv'
     out_path   = 'day2/data/speeches_with_sentiment.csv'
     cache_path = 'day2/data/embeddings_cache.npy'
 

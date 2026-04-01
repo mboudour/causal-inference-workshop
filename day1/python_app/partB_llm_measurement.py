@@ -14,13 +14,13 @@ import numpy as np
 import torch
 
 # --- LOAD DATA ---
-df = pd.read_csv("day1/data/llm/speeches_sample.csv")
+df = pd.read_csv("day1/data/speeches_sample.csv")
 
 # --- EMBEDDING CACHE ---
 # On first run, embeddings are computed and saved to disk.
 # On subsequent runs, the cached file is loaded directly,
 # skipping the model download and encoding entirely.
-CACHE_PATH = "day1/data/llm/embeddings_cache.npy"
+CACHE_PATH = "day1/data/embeddings_cache.npy"
 
 if os.path.exists(CACHE_PATH):
     print("Loading embeddings from cache...")
@@ -55,5 +55,5 @@ print(f"\nSystem Check: Torch {torch.__version__} | NumPy {np.__version__}")
 print("LLM-based difference (Republican - Democrat):", ate_llm)
 
 # --- SAVE RESULTS ---
-df.to_csv("day1/data/llm/speeches_with_stance.csv", index=False)
+df.to_csv("day1/data/speeches_with_stance.csv", index=False)
 print("LLM labels saved.")

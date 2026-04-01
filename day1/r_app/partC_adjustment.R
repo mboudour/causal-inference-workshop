@@ -3,7 +3,7 @@ library(dplyr)
 library(broom)
 
 # --- LOAD DATA ---
-df <- read_csv("day1/data/llm/speeches_sample.csv", show_col_types = FALSE)
+df <- read_csv("day1/data/speeches_sample.csv", show_col_types = FALSE)
 
 # --- OUTCOME AND TREATMENT ---
 df <- df %>%
@@ -56,7 +56,7 @@ ate_ipw <- (
 cat(sprintf("ATE via IPW (normalized): %.2f\n", ate_ipw))
 
 # 5. MEASUREMENT ERROR DIAGNOSTIC (requires Part B output)
-stance_path <- "day1/data/llm/speeches_with_stance_R.csv"
+stance_path <- "day1/data/speeches_with_stance_R.csv"
 if (file.exists(stance_path)) {
   df_llm <- read_csv(stance_path, show_col_types = FALSE)
 

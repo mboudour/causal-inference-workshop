@@ -8,13 +8,13 @@ library(reticulate)
 use_condaenv("seminar_computations", required = TRUE)
 
 # --- LOAD DATA ---
-df <- read_csv("day1/data/llm/speeches_sample.csv", show_col_types = FALSE)
+df <- read_csv("day1/data/speeches_sample.csv", show_col_types = FALSE)
 
 # --- EMBEDDING CACHE ---
 # On first run, embeddings are computed via SentenceTransformer and saved to disk.
 # On subsequent runs, the cached file is loaded directly,
 # skipping the model download and encoding entirely.
-cache_path <- "day1/data/llm/embeddings_cache.npy"
+cache_path <- "day1/data/embeddings_cache.npy"
 
 if (file.exists(cache_path)) {
   message("Loading embeddings from cache...")
@@ -60,5 +60,5 @@ ate_llm <- mean(df$Y_tilde[df$D == 1]) - mean(df$Y_tilde[df$D == 0])
 cat("LLM-based difference (Republican - Democrat):", ate_llm, "\n")
 
 # --- SAVE RESULTS ---
-write_csv(df, "day1/data/llm/speeches_with_stance_R.csv")
+write_csv(df, "day1/data/speeches_with_stance_R.csv")
 cat("LLM labels saved.\n")
