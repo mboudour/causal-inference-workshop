@@ -23,12 +23,44 @@ out_path  <- "day3/data/dsl_results_R.csv"
 
 dir.create("day3/data", showWarnings = FALSE, recursive = TRUE)
 
-if (!file.exists(data_path)) {
-  stop(paste("Error:", data_path, "not found."))
+if (file.exists(data_path)) {
+  df <- read_csv(data_path, show_col_types = FALSE)
+  cat(sprintf("Loaded %d speeches from %s\n", nrow(df), data_path))
+} else {
+  cat(sprintf("Note: %s not found. Generating synthetic data.\n", data_path))
+  cat("  (Run 'git pull origin main' from seminar_computations/ to get the real data.)\n")
+  set.seed(123)
+  n_synth  <- 2000
+  rep_pool <- c("government", "budget", "deficit", "spending", "tax", "reform",
+                "healthcare", "military", "security", "border", "freedom",
+                "liberty", "constitution", "economy", "jobs", "growth",
+                "business", "regulation", "energy", "bill", "amendment")
+  dem_pool <- c("healthcare", "education", "climate", "environment", "equality",
+                "rights", "workers", "union", "wage", "social", "medicare",
+                "medicaid", "infrastructure", "investment", "community",
+                "diversity", "inclusion", "committee", "states", "amendment")
+  common   <- c("the", "that", "this", "with", "have", "will", "from", "they",
+                "their", "about", "would", "more", "people", "which", "care")
+  make_speech <- function(pool, n) {
+    words <- c(pool, common, common)
+    sapply(seq_len(n), function(i)
+      paste(sample(words, sample(60:180, 1), replace = TRUE), collapse = " "))
+  }
+  n_rep <- round(n_synth * 0.40)
+  n_dem <- n_synth - n_rep
+  df <- data.frame(
+    speech_id = seq_len(n_synth),
+    text      = c(make_speech(rep_pool, n_rep), make_speech(dem_pool, n_dem)),
+    speaker   = paste0("Speaker_", seq_len(n_synth)),
+    party     = c(rep("Republican", n_rep), rep("Democrat", n_dem)),
+    date      = sample(c("2009-01-01", "2010-01-01"), n_synth, replace = TRUE),
+    year      = sample(c(2009L, 2010L), n_synth, replace = TRUE),
+    stringsAsFactors = FALSE
+  )
+  df <- df[sample(nrow(df)), ]
+  cat(sprintf("Generated %d synthetic speeches (%d R, %d D).\n",
+              n_synth, n_rep, n_dem))
 }
-
-df <- read_csv(data_path, show_col_types = FALSE)
-cat(sprintf("Loaded %d speeches.\n", nrow(df)))
 
 D <- as.integer(df$party == "Republican")
 n <- nrow(df)
