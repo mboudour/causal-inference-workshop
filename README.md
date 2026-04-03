@@ -8,7 +8,7 @@ Three-day academic workshop materials on applying Large Language Models (LLMs) t
 
 The interactive companion app runs entirely in the browser — no local installation required. Use the sidebar to navigate between days. Each day's page walks through the core computations step by step, with interactive sliders and buttons that let you adjust parameters (number of cross-fitting folds, noise levels, labeled sample size, and more) and immediately see how the results change. The app uses the same U.S. Congressional speeches dataset (Hein Bound 111) as the local scripts, so the numbers match what you obtain by running the scripts on your own machine.
 
-<--
+<!--
 The interactive companion app runs entirely in the browser — no local installation required. It mirrors the workshop's three-day structure: use the sidebar to navigate between days. Each day's page walks through the core computations step by step, with interactive sliders and buttons that let you adjust parameters (number of folds, noise levels, labeled sample size, etc.) and immediately see how the results change. The app uses the same U.S. Congressional speeches dataset (Hein Bound 111) as the local scripts, so the numbers you see in the app match what you would obtain by running the scripts on your own machine.
 -->
 
