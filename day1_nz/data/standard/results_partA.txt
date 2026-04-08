@@ -1,0 +1,2 @@
+Naive difference (Republican - Democrat): -91.5734
+Regression coefficient on D: -117.1982
