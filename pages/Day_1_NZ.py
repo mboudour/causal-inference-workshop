@@ -30,7 +30,7 @@ st.title("📊 Causal Inference with LLMs — Day 1 NZ")
 st.markdown(
     "**Workshop companion app.** This page mirrors Day 1 using a New Zealand parliamentary corpus. "
     "The built-in dataset comes from ParlSpeech V2 and has been adapted for comparability with the Day 1 workflow. "
-    "Party labels are mapped as **National → Republican** and **Labour → Democrat**."
+    "The analysis keeps the original NZ party names: **National** and **Labour**."
 )
 st.markdown("---")
 
@@ -66,15 +66,8 @@ if not required_cols.issubset(df_raw.columns):
     st.error(f"Dataset must contain columns: {required_cols}. Found: {set(df_raw.columns)}")
     st.stop()
 
-party_map = {
-    "National": "Republican",
-    "Labour": "Democrat",
-}
-if set(df_raw["party"].dropna().unique()) & set(party_map.keys()):
-    df_raw["party"] = df_raw["party"].replace(party_map)
-
-df_raw = df_raw[df_raw["party"].isin(["Republican", "Democrat"])].copy()
-df_raw["D"] = (df_raw["party"] == "Republican").astype(int)
+df_raw = df_raw[df_raw["party"].isin(["National", "Labour"])].copy()
+df_raw["D"] = (df_raw["party"] == "National").astype(int)
 
 with st.expander("Preview data"):
     cols = [
@@ -88,8 +81,8 @@ with st.expander("Preview data"):
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Total speeches", f"{len(df_raw):,}")
-col2.metric("Republican / National", f"{df_raw['D'].sum():,}")
-col3.metric("Democrat / Labour", f"{(1 - df_raw['D']).sum():,}")
+col2.metric("National", f"{df_raw['D'].sum():,}")
+col3.metric("Labour", f"{(1 - df_raw['D']).sum():,}")
 
 st.markdown("---")
 
@@ -201,8 +194,8 @@ if st.button("▶ Run Section 2 — Overlap Check"):
 
     st.subheader("Propensity Score Distribution by Party")
     fig, ax = plt.subplots(figsize=(7, 3.5))
-    ax.hist(ps[df["D"] == 1], bins=30, alpha=0.6, label="Republican / National", color="#c0392b", density=True)
-    ax.hist(ps[df["D"] == 0], bins=30, alpha=0.6, label="Democrat / Labour", color="#2980b9", density=True)
+    ax.hist(ps[df["D"] == 1], bins=30, alpha=0.6, label="National", color="#c0392b", density=True)
+    ax.hist(ps[df["D"] == 0], bins=30, alpha=0.6, label="Labour", color="#2980b9", density=True)
     ax.set_xlabel("Propensity score $\\hat{e}(X)$")
     ax.set_ylabel("Density")
     ax.set_title("Overlap check: propensity score distributions")
@@ -220,9 +213,9 @@ if st.button("▶ Run Section 2 — Overlap Check"):
         st.warning("Some propensity scores are near 0 or 1, so overlap may be violated for some units.")
 
     year_tab = df.groupby("year")["D"].agg(["mean", "count"]).rename(
-        columns={"mean": "Prop. Republican / National", "count": "N speeches"}
+        columns={"mean": "Prop. National", "count": "N speeches"}
     )
-    year_tab["Prop. Republican / National"] = year_tab["Prop. Republican / National"].round(3)
+    year_tab["Prop. National"] = year_tab["Prop. National"].round(3)
     st.subheader("Treatment share by year")
     st.dataframe(year_tab)
 
@@ -354,8 +347,8 @@ if st.button("▶ Run Section 4 — LLM Measurement"):
     c.metric("Corr(Ỹ, D)", f"{corr_error_D:+.4f}")
 
     fig, axes = plt.subplots(1, 2, figsize=(10, 3.5))
-    axes[0].hist(df[df["D"] == 1]["Y_tilde"], bins=40, alpha=0.6, color="#c0392b", label="Republican / National", density=True)
-    axes[0].hist(df[df["D"] == 0]["Y_tilde"], bins=40, alpha=0.6, color="#2980b9", label="Democrat / Labour", density=True)
+    axes[0].hist(df[df["D"] == 1]["Y_tilde"], bins=40, alpha=0.6, color="#c0392b", label="National", density=True)
+    axes[0].hist(df[df["D"] == 0]["Y_tilde"], bins=40, alpha=0.6, color="#2980b9", label="Labour", density=True)
     axes[0].set_xlabel("Stance score $\\tilde{Y}$")
     axes[0].set_ylabel("Density")
     axes[0].set_title("Distribution of LLM stance by party")
