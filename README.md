@@ -18,6 +18,19 @@ The interactive companion app runs entirely in the browser — no local installa
 | [day2/](day2/) | Causal estimators (DiM, Regression, G-formula, Matching, IPW, AIPW), measurement error (MCAR vs MNAR) |
 | [day3/](day3/) | Estimation and Auditing with LLMs: DML, DSL, Causal Auditing |
 
+## Dataset Notes
+
+The original **Day 1** materials use the **Hein Bound 111th U.S. Congressional speeches** sample that accompanies the workshop repository.
+
+The parallel **Day 1 NZ** materials in `day1_nz/` use a different source dataset: **New Zealand House of Representatives speeches** from **ParlSpeech V2**, distributed through **Harvard Dataverse** at [https://doi.org/10.7910/DVN/L4OAKN](https://doi.org/10.7910/DVN/L4OAKN ) [1]. In particular, the local raw file used for this adaptation is `Corp_NZHoR_V2.rds`, which was downloaded from that ParlSpeech V2 collection [1].
+
+The purpose of `day1_nz/` is to mirror the Day 1 computational structure while replacing the original U.S. speech corpus with a smaller English-language parliamentary corpus from New Zealand. For compatibility with the Day 1 workflow, speeches are filtered to the two major parties and mapped as follows: **National → Republican** and **Labour → Democrat**.
+
+The raw `.rds` file is used locally and should **not** be committed to GitHub.
+
+Additional parallel NZ adaptations for **`day2_nz/`** and **`day3_nz/`** are planned and will extend the same cross-dataset structure to the later workshop days.
+
+
 ## Replicability and Reproducibility
 
 This repository is designed to be fully reproducible. The scripts demonstrate causal inference concepts using a sample of U.S. Congressional speeches from the 111th Congress (Hein Bound).
