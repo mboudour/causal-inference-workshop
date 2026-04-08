@@ -1,3 +1,105 @@
+
+
+Collaborate
+
+Share
+Yes. We should change the display labels in pages/Day_1_NZ.py to the real NZ names, while keeping the internal binary coding unchanged.
+Please make these exact replacements in pages/Day_1_NZ.py.
+Find
+Replace with
+"Party labels are mapped as **National → Republican** and **Labour → Democrat**."
+"The analysis keeps the original NZ party names: **National** and **Labour**."
+df_raw = df_raw[df_raw["party"].isin(["Republican", "Democrat"])].copy()
+df_raw = df_raw[df_raw["party"].isin(["National", "Labour"])].copy()
+df_raw["D"] = (df_raw["party"] == "Republican").astype(int)
+df_raw["D"] = (df_raw["party"] == "National").astype(int)
+col2.metric("Republican / National", f"{df_raw['D'].sum():,}")
+col2.metric("National", f"{df_raw['D'].sum():,}")
+col3.metric("Democrat / Labour", f"{(1 - df_raw['D']).sum():,}")
+col3.metric("Labour", f"{(1 - df_raw['D']).sum():,}")
+ax.hist(ps[df["D"] == 1], bins=30, alpha=0.6, label="Republican / National", color="#c0392b", density=True)
+ax.hist(ps[df["D"] == 1], bins=30, alpha=0.6, label="National", color="#c0392b", density=True)
+ax.hist(ps[df["D"] == 0], bins=30, alpha=0.6, label="Democrat / Labour", color="#2980b9", density=True)
+ax.hist(ps[df["D"] == 0], bins=30, alpha=0.6, label="Labour", color="#2980b9", density=True)
+columns={"mean": "Prop. Republican / National", "count": "N speeches"}
+columns={"mean": "Prop. National", "count": "N speeches"}
+year_tab["Prop. Republican / National"] = year_tab["Prop. Republican / National"].round(3)
+year_tab["Prop. National"] = year_tab["Prop. National"].round(3)
+axes[0].hist(df[df["D"] == 1]["Y_tilde"], bins=40, alpha=0.6, color="#c0392b", label="Republican / National", density=True)
+axes[0].hist(df[df["D"] == 1]["Y_tilde"], bins=40, alpha=0.6, color="#c0392b", label="National", density=True)
+axes[0].hist(df[df["D"] == 0]["Y_tilde"], bins=40, alpha=0.6, color="#2980b9", label="Democrat / Labour", density=True)
+axes[0].hist(df[df["D"] == 0]["Y_tilde"], bins=40, alpha=0.6, color="#2980b9", label="Labour", density=True)
+Also delete this whole block, because it is what converted the names:
+Python
+party_map = {
+    "National": "Republican",
+    "Labour": "Democrat",
+}
+if set(df_raw["party"].dropna().unique()) & set(party_map.keys()):
+    df_raw["party"] = df_raw["party"].replace(party_map)
+After these edits, the app will show National and Labour everywhere, but the treatment indicator D will still work correctly by coding National = 1 and Labour = 0.
+When you have saved the file, reply only:
+saved nz labels
+Total speeches
+
+0
+
+National
+
+0
+
+Labour
+
+0
+Yes — this shows the filter is now excluding all rows.
+The reason is almost certainly this:
+What the stored NZ CSV currently contains
+What the edited code now expects
+Republican / Democrat
+National / Labour
+So the page is loading the dataset, but then this line removes everything:
+Python
+df_raw = df_raw[df_raw["party"].isin(["National", "Labour"])].copy()
+Please fix pages/Day_1_NZ.py like this.
+1. Put back this mapping block
+Python
+party_map = {
+    "National": "Republican",
+    "Labour": "Democrat",
+}
+if set(df_raw["party"].dropna().unique()) & set(party_map.keys()):
+    df_raw["party"] = df_raw["party"].replace(party_map)
+2. Keep these internal coding lines exactly
+Python
+df_raw = df_raw[df_raw["party"].isin(["Republican", "Democrat"])].copy()
+df_raw["D"] = (df_raw["party"] == "Republican").astype(int)
+3. But keep the visible labels as NZ labels
+So leave these display lines as:
+Python
+col2.metric("National", f"{df_raw['D'].sum():,}")
+col3.metric("Labour", f"{(1 - df_raw['D']).sum():,}")
+and keep the chart labels as National and Labour.
+In short: use Republican/Democrat internally, but show National/Labour visibly.
+After you save that file, refresh the app and reply only:
+fixed
+pasted_content_5.txt
+Text · 15.68 KB
+Correct it and send it back:
+
+I reviewed the full Day_1_NZ.py content. To fix issues, I will re-enable the party mapping block, keep internal binary coding with "Republican"/"Democrat", but update display labels to "National"/"Labour".
+
+I corrected the file and attached the fixed version. Please replace your current pages/Day_1_NZ.py with the attached file.
+Day_1_NZ_corrected.py
+Code · 16.36 KB
+View all files in this task
+Task completed
+How was this result?
+Suggested follow-ups
+
+
+
+
+Day_1_NZ_corrected.py
 # Copyright (c) 2026 Moses Boudourides
 # Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
@@ -30,7 +132,7 @@ st.title("📊 Causal Inference with LLMs — Day 1 NZ")
 st.markdown(
     "**Workshop companion app.** This page mirrors Day 1 using a New Zealand parliamentary corpus. "
     "The built-in dataset comes from ParlSpeech V2 and has been adapted for comparability with the Day 1 workflow. "
-    "The analysis keeps the original NZ party names: **National** and **Labour**."
+    "The app displays the original NZ party names: **National** and **Labour**."
 )
 st.markdown("---")
 
@@ -66,18 +168,37 @@ if not required_cols.issubset(df_raw.columns):
     st.error(f"Dataset must contain columns: {required_cols}. Found: {set(df_raw.columns)}")
     st.stop()
 
-df_raw = df_raw[df_raw["party"].isin(["National", "Labour"])].copy()
-df_raw["D"] = (df_raw["party"] == "National").astype(int)
+# Accept either the original NZ labels (National/Labour) or the internally recoded
+# labels already stored in the current built-in CSV (Republican/Democrat).
+party_to_internal = {
+    "National": "Republican",
+    "Labour": "Democrat",
+    "Republican": "Republican",
+    "Democrat": "Democrat",
+}
+party_to_display = {
+    "Republican": "National",
+    "Democrat": "Labour",
+    "National": "National",
+    "Labour": "Labour",
+}
+
+df_raw["party_internal"] = df_raw["party"].map(party_to_internal)
+df_raw = df_raw[df_raw["party_internal"].isin(["Republican", "Democrat"])].copy()
+df_raw["party_display"] = df_raw["party_internal"].map(party_to_display)
+df_raw["D"] = (df_raw["party_internal"] == "Republican").astype(int)
 
 with st.expander("Preview data"):
+    preview_df = df_raw.copy()
+    preview_df["party"] = preview_df["party_display"]
     cols = [
-        "speech_id" if "speech_id" in df_raw.columns else "text",
-        "speaker" if "speaker" in df_raw.columns else "party",
+        "speech_id" if "speech_id" in preview_df.columns else "text",
+        "speaker" if "speaker" in preview_df.columns else "party",
         "party",
         "year",
         "text",
     ]
-    st.dataframe(df_raw[cols].head(10))
+    st.dataframe(preview_df[cols].head(10))
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Total speeches", f"{len(df_raw):,}")
@@ -431,3 +552,4 @@ st.markdown("---")
 st.caption(
     "Moses Boudourides · Northwestern University · Causal Inference with LLMs Workshop · Day 1 NZ"
 )
+Causal Inference Using LLMs Seminar: Glossary and Speaker Notes - Manus
