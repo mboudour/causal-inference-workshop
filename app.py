@@ -15,7 +15,10 @@ st.set_page_config(
 )
 
 st.title("📊 Causal Inference with LLMs")
-st.subheader("Moses Boudourides · Northwestern University")
+st.subheader("Moses Boudourides")
+st.markdown(
+    "[https://github.com/mboudour/causal-inference-workshop](https://github.com/mboudour/causal-inference-workshop )"
+)
 st.markdown("---")
 
 st.markdown(
