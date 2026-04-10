@@ -1,0 +1,27 @@
+name: seminar_computations
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pytorch=2.2.2
+  - numpy<2
+  - pandas
+  - scipy
+  - scikit-learn
+  - statsmodels
+  - matplotlib
+  - seaborn
+  - tqdm
+  - jupyter
+  - ipywidgets
+  - python-graphviz
+  - numba
+  - pip
+  - pip:
+      - transformers==4.37.2
+      - sentence-transformers<3
+      - doubleml
+      - voila
+      - openai
+      - dowhy
